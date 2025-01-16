@@ -1,0 +1,29 @@
+### Health Check
+GET http://localhost:8000/api/v1/health
+
+### AUTH Operations ###
+### signup User
+POST http://localhost:8000/api/v1/auth/local/signup
+Content-Type: application/json
+
+{
+  "fullName": "Freshiadoe11",
+  "email": "Freshia@example11.com",
+  "password": "secretpass12311",
+  "role": "ADMIN",
+  "username": "freshiadoe11"
+}
+
+### signin User
+POST http://localhost:8000/api/v1/auth/local/signin
+Content-Type: application/json
+
+{
+  "email": "Freshia@example.com",
+  "password": "secretpass123"
+}
+
+### User Operations ###
+### Get All Users
+GET http://localhost:8000/api/v1/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiRnJlc2hpYUBleGFtcGxlLmNvbSIsImlhdCI6MTczNjk2NTE1MywiZXhwIjoxNzM2OTY2MDUzfQ.ZJBmG7GnfyXOe7N9rOCWrgGbINsYWwrs24fQvyBx2Y0
