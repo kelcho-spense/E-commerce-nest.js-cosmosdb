@@ -19,20 +19,38 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This project demonstrates building an e-commerce API using Nest.js integrated with Azure Cosmos DB's vector search capabilities. It showcases how to implement semantic product search using vector similarity.
 
-## Project setup
+## Vector Search Features
+
+- **Product Search**: Utilize vector similarity to find products based on semantic meaning
+- **Vector Distance Queries**: Implement queries using VectorDistance() system function
+- **Vector Indexing**: Leverage Azure Cosmos DB's vector indexing policies for efficient searches
+
+## Vector Search Implementation
+
+### Container Vector Policies
+Required configuration includes:
+- Path: Property containing the vector
+- Datatype: Vector property type (default: Float32)
+- Dimensions: Vector length (default: 1536)
+- Distance Functions: cosine, dot product, or euclidean
+
+### Setup Requirements
+1. Enable vector search in Azure Cosmos DB
+2. Configure vector indexing policies
+3. Implement vector embeddings using Azure OpenAI or Hugging Face
+
+## Project Setup
 
 ```bash
 $ pnpm install
 ```
 
-## Compile and run the project
+## Running the Application
 
 ```bash
 # development
@@ -45,7 +63,7 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
-## Run tests
+## Testing
 
 ```bash
 # unit tests
@@ -57,14 +75,6 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
-
-
-## Vector Search
-This setup will allow you to perform semantic searches on:
-
-- Product descriptions: Good for semantic search of product descriptions
-- Product features: Good for finding products with similar features
-- Product tags: Good for finding products with similar tags
 
 ## License
 
