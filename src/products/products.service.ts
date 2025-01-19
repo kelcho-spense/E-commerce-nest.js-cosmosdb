@@ -4,6 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { DatabaseService } from '../database/database.service';
 import { Product } from './entities/product.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { generateTextVector } from '../utils/embedding';
 
 @Injectable()
 export class ProductsService {
@@ -12,9 +13,35 @@ export class ProductsService {
   // Create a new product
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const container = this.databaseService.getContainer();
+
+    // Generate vectors concurrently
+    const vectorPromises = {
+      descriptionVector: createProductDto.description
+        ? generateTextVector(createProductDto.description)
+        : null,
+      tagsVector: createProductDto.tags
+        ? generateTextVector(createProductDto.tags.join(' '))
+        : null,
+      featuresVector: createProductDto.features
+        ? generateTextVector(createProductDto.features)
+        : null,
+      reviewsCountVector: createProductDto.reviewsCount
+        ? generateTextVector(createProductDto.reviewsCount.toString())
+        : null,
+    };
+
+    // Wait for all vectors to be generated
+    const vectors = await Promise.all(Object.values(vectorPromises));
+    console.log(vectors);
+
     const product: Product = {
+      id: uuidv4(),
       ...createProductDto,
-      id: uuidv4(), // Generate unique ID
+      ...Object.fromEntries(
+        Object.entries(vectorPromises)
+          .filter(([, promise]) => promise !== null)
+          .map(([key], index) => [key, vectors[index]]),
+      ),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -26,7 +53,8 @@ export class ProductsService {
   // Get all products
   async findAll(): Promise<Product[]> {
     const container = this.databaseService.getContainer();
-    const query = 'SELECT * FROM c';
+    const query =
+      'SELECT c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt  FROM c';
     const { resources } = await container.items.query(query).fetchAll();
     return resources;
   }
@@ -69,5 +97,89 @@ export class ProductsService {
     if (resource) {
       await container.item(id, id).delete();
     }
+  }
+
+  // searchProductsByDescriptionVector
+  async searchProductsByDescriptionVector(
+    description: string,
+    top: number,
+  ): Promise<Product[]> {
+    const descriptionVector = await generateTextVector(description);
+
+    const container = this.databaseService.getContainer();
+    const querySpec = {
+      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      VectorDistance( c.descriptionVector, @descriptionVector ) AS SimilarityScore  
+      FROM c FROM c 
+      ORDER BY VectorDistance(c.descriptionVector, @queryVector)`,
+      parameters: [
+        { name: '@descriptionVector', value: descriptionVector },
+        { name: '@top', value: top },
+      ],
+    };
+    const { resources } = await container.items.query(querySpec).fetchAll();
+    return resources;
+  }
+  // searchProductsByFeaturesVector
+  async searchProductsByFeaturesVector(
+    features: string,
+    top: number,
+  ): Promise<Product[]> {
+    const featuresVector = await generateTextVector(features);
+    const container = this.databaseService.getContainer();
+    const querySpec = {
+      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      VectorDistance( c.featuresVector, @featuresVector ) AS SimilarityScore  
+      FROM c FROM c 
+      ORDER BY VectorDistance(c.featuresVector, @queryVector)`,
+      parameters: [
+        { name: '@featuresVector', value: featuresVector },
+        { name: '@top', value: top },
+      ],
+    };
+    const { resources } = await container.items.query(querySpec).fetchAll();
+    return resources;
+  }
+
+  // searchProductsByTagsVector
+  async searchProductsByTagsVector(
+    tags: string,
+    top: number,
+  ): Promise<Product[]> {
+    const tagsVector = await generateTextVector(tags);
+    const container = this.databaseService.getContainer();
+    const querySpec = {
+      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      VectorDistance( c.tagsVector, @tagsVector ) AS SimilarityScore  
+      FROM c FROM c 
+      ORDER BY VectorDistance(c.tagsVector, @queryVector)`,
+      parameters: [
+        { name: '@tagsVector', value: tagsVector },
+        { name: '@top', value: top },
+      ],
+    };
+    const { resources } = await container.items.query(querySpec).fetchAll();
+    return resources;
+  }
+
+  // searchProductsByReviewsCountVector
+  async searchProductsByReviewsCountVector(
+    reviewsCount: number,
+    top: number,
+  ): Promise<Product[]> {
+    const reviewsCountVector = await generateTextVector(reviewsCount);
+    const container = this.databaseService.getContainer();
+    const querySpec = {
+      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      VectorDistance( c.reviewsCountVector, @reviewsCountVector ) AS SimilarityScore  
+      FROM c FROM c 
+      ORDER BY VectorDistance(c.reviewsCountVector, @queryVector)`,
+      parameters: [
+        { name: '@reviewsCountVector', value: reviewsCountVector },
+        { name: '@top', value: top },
+      ],
+    };
+    const { resources } = await container.items.query(querySpec).fetchAll();
+    return resources;
   }
 }

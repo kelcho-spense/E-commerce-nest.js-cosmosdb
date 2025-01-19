@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function generateTextVector(text: string): Promise<number[]> {
+export async function generateTextVector(text: any): Promise<number[]> {
   const response = await axios.post(
     process.env.AZURE_OPENAI_TEXT_EMBEDDING_MODEL_ENDPOINT,
     { input: text },

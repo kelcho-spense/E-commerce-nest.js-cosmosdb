@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -42,5 +43,47 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.remove(id);
+  }
+
+  // searchProductsByDescription  url= http://localhost:3000/products/search/description?description='white'?top=10
+  @Get('search/description')
+  searchProductsByDescriptionVector(
+    @Query('description') description: string,
+    @Query('top') top: number = 10,
+  ) {
+    return this.productsService.searchProductsByDescriptionVector(
+      description,
+      top,
+    );
+  }
+
+  // searchProductsByFeatures url= http://localhost:3000/products/search/features?features='white'?top=10
+  @Get('search/features')
+  searchProductsByFeaturesVector(
+    @Query('features') features: string,
+    @Query('top') top: number = 10,
+  ) {
+    return this.productsService.searchProductsByFeaturesVector(features, top);
+  }
+
+  //searchProductsByFeatures url= http://localhost:3000/products/search/tags?tags='white'?top=10
+  @Get('search/tags')
+  searchProductsByTagsVector(
+    @Query('tags') tags: string,
+    @Query('top') top: number = 10,
+  ) {
+    return this.productsService.searchProductsByTagsVector(tags, top);
+  }
+
+  //searchProductsByReviewsCount url= http://localhost:3000/products/search/reviews?reviewsCount=10?top=10
+  @Get('search/reviews')
+  searchProductsByReviewsCountVector(
+    @Query('reviewsCount') reviewsCount: number,
+    @Query('top') top: number = 10,
+  ) {
+    return this.productsService.searchProductsByReviewsCountVector(
+      reviewsCount,
+      top,
+    );
   }
 }
