@@ -8,7 +8,7 @@ import { generateTextVector } from '../utils/embedding';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly databaseService: DatabaseService) { }
+  constructor(private readonly databaseService: DatabaseService) {}
 
   // Create a new product
   async create(createProductDto: CreateProductDto): Promise<Product> {
