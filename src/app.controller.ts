@@ -9,4 +9,9 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('generate-fake-products')
+  generateFakeProducts(): Promise<string> {
+    return this.appService.generateFakeProducts();
+  }
 }

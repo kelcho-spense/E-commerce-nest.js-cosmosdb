@@ -57,3 +57,7 @@ GET http://localhost:8000/products/search/features?features='white'?top=10
 GET http://localhost:8000/products/search/tags?tags='wireless'?top=10
 ### searchProductsByReviewsCount
 GET http://localhost:8000/products/search/reviewsCount?reviewsCount=100?top=10
+
+
+### GENERATE FAKE DATA ##
+GET http://localhost:8000/generate-fake-products
