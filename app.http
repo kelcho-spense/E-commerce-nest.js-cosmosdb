@@ -36,7 +36,7 @@ GET http://localhost:8000/products
 GET http://localhost:8000/products/92300491-82cb-489d-9b39-827c54ba751b
 
 ### update a product
-PATCH  http://localhost:8000/products/92300491-82cb-489d-9b39-827c54ba751b
+PATCH  http://localhost:8000/products/92300491-82cb-48
 Content-Type: application/json
 
 {

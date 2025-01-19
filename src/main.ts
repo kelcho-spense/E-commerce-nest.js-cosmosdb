@@ -1,10 +1,14 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { CosmosExceptionFilter } from './database/cosmosExceptionFilter';
+import { AllExceptionsFilter } from './http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new CosmosExceptionFilter());
+
+  // Register the global exception filter
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
