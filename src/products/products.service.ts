@@ -1,64 +1,68 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectModel } from '@nestjs/azure-database';
-import type { Container } from '@azure/cosmos';
+import { DatabaseService } from '../database/database.service';
 import { Product } from './entities/product.entity';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    @InjectModel(Product) private readonly productContainer: Container,
-  ) {}
+  constructor(private readonly databaseService: DatabaseService) {}
 
+  // Create a new product
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const item = {
+    const container = this.databaseService.getContainer();
+    const product: Product = {
       ...createProductDto,
-      id: uuidv4(),
+      id: uuidv4(), // Generate unique ID
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const { resource } =
-      await this.productContainer.items.create<Product>(item);
+
+    const { resource } = await container.items.create(product);
     return resource;
   }
 
+  // Get all products
   async findAll(): Promise<Product[]> {
-    const querySpec = { query: 'SELECT * FROM c' };
-    const { resources } = await this.productContainer.items
-      .query<Product>(querySpec)
-      .fetchAll();
+    const container = this.databaseService.getContainer();
+    const query = 'SELECT * FROM c';
+    const { resources } = await container.items.query(query).fetchAll();
     return resources;
   }
 
+  // Get single product by ID
   async findOne(id: string): Promise<Product> {
-    const { resource } = await this.productContainer.item(id, id).read();
+    const container = this.databaseService.getContainer();
+    const { resource } = await container.item(id, id).read();
     return resource;
   }
 
+  // Update a product
   async update(
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    let { resource: existingProduct } = await this.productContainer
-      .item(id, id)
-      .read<Product>();
+    const container = this.databaseService.getContainer();
+    const { resource: existingProduct } = await container.item(id, id).read();
 
-    existingProduct = {
+    const updatedProduct: Product = {
       ...existingProduct,
       ...updateProductDto,
       updatedAt: new Date(),
     };
 
-    const { resource: updatedProduct } = await this.productContainer
-      .item(id, id)
-      .replace<Product>(existingProduct);
-
-    return updatedProduct;
+    const { resource } = await container.item(id, id).replace(updatedProduct);
+    return resource;
   }
 
+  // Delete a product
   async remove(id: string): Promise<void> {
-    await this.productContainer.item(id, id).delete<Product>();
+    const container = this.databaseService.getContainer();
+
+    const { resource } = await container.item(id, id).read();
+    if (resource) {
+      await container.item(id, id).delete();
+    }
   }
 }

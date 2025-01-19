@@ -1,4 +1,5 @@
 export class CreateProductDto {
+  id?: string;
   name: string;
   brand: string;
   sku: string;
@@ -19,4 +20,6 @@ export class CreateProductDto {
   color: string;
   material: string;
   origin: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -1,29 +1,49 @@
 ### Health Check
-GET http://localhost:8000/api/v1/health
+GET http://localhost:8000/hello
 
-### AUTH Operations ###
-### signup User
-POST http://localhost:8000/api/v1/auth/local/signup
+### product Operations ###
+### create a product
+POST http://localhost:8000/products
 Content-Type: application/json
 
 {
-  "fullName": "Freshiadoe11",
-  "email": "Freshia@example11.com",
-  "password": "secretpass12311",
-  "role": "ADMIN",
-  "username": "freshiadoe11"
+  "name": "Premium Wireless Headphones",
+  "brand": "AudioTech",
+  "sku": "AT-WH-001",
+  "category": "Electronics",
+  "price": 199.99,
+  "currency": "USD",
+  "stock": 50,
+  "description": "High-quality wireless headphones with noise cancellation",
+  "features": "Active Noise Cancellation, Bluetooth 5.0, 30-hour battery life",
+  "rating": 4.5,
+  "reviewsCount": 128,
+  "tags": ["wireless", "headphones", "audio", "bluetooth"],
+  "imageUrl": "https://example.com/images/headphones.jpg",
+  "manufacturer": "AudioTech Industries",
+  "model": "WH-2000X",
+  "releaseDate": "2023-01-15",
+  "warranty": "2 years limited warranty",
+  "color": "Midnight Black",
+  "material": "Premium Plastic and Leather",
+  "origin": "Japan"
 }
 
-### signin User
-POST http://localhost:8000/api/v1/auth/local/signin
+### get all products
+GET http://localhost:8000/products
+
+### get a product
+GET http://localhost:8000/products/92300491-82cb-489d-9b39-827c54ba751b
+
+### update a product
+PATCH  http://localhost:8000/products/92300491-82cb-489d-9b39-827c54ba751b
 Content-Type: application/json
 
 {
-  "email": "Freshia@example.com",
-  "password": "secretpass123"
+  "name": "Premium Wireless Headphones V2",
+  "description": "Updated high-quality wireless headphones with noise cancellation"
 }
 
-### User Operations ###
-### Get All Users
-GET http://localhost:8000/api/v1/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiRnJlc2hpYUBleGFtcGxlLmNvbSIsImlhdCI6MTczNjk2NTE1MywiZXhwIjoxNzM2OTY2MDUzfQ.ZJBmG7GnfyXOe7N9rOCWrgGbINsYWwrs24fQvyBx2Y0
+### delete a product
+DELETE http://localhost:8000/products/91300491-82cb-489d-9b39-827c54ba751b
+
