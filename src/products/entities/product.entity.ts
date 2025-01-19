@@ -20,7 +20,10 @@ export class Product {
   color: string;
   material: string;
   origin: string;
-  descriptionVector?: number[];
   createdAt: Date;
   updatedAt: Date;
+  descriptionVector?: number[];
+  reviewsCountVector?: number[];
+  featuresVector?: number[];
+  tagsVector?: number[];
 }

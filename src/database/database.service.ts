@@ -1,6 +1,16 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CosmosClient, Database, Container } from '@azure/cosmos';
+import {
+  CosmosClient,
+  Database,
+  Container,
+  PartitionKeyDefinitionVersion,
+  PartitionKeyKind,
+  CosmosDbDiagnosticLevel,
+} from '@azure/cosmos';
+
+import { productVectorEmbeddingPolicy } from './vectorEmbeddingPolicies';
+import { productIndexingPolicy } from './indexingPolicies';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
@@ -12,6 +22,10 @@ export class DatabaseService implements OnModuleInit {
     this.client = new CosmosClient({
       endpoint: this.configService.get<string>('AZURE_COSMOS_DB_ENDPOINT'),
       key: this.configService.get<string>('AZURE_COSMOS_DB_KEY'),
+      diagnosticLevel:
+        this.configService.get<string>('NODE_ENV') != 'production'
+          ? CosmosDbDiagnosticLevel.debug
+          : CosmosDbDiagnosticLevel.info,
     });
   }
 
@@ -29,7 +43,18 @@ export class DatabaseService implements OnModuleInit {
     // Create containers if it doesn't exist
     const { container } = await this.database.containers.createIfNotExists({
       id: 'products',
-      partitionKey: '/id',
+      partitionKey: {
+        paths: ['/id'],
+        version: PartitionKeyDefinitionVersion.V2,
+        kind: PartitionKeyKind.Hash,
+      },
+      // Use DiskANN index type since it's best for large datasets (>50k vectors)
+      // Keep vectors excluded from regular indexing paths for better performance
+      // Use Cosine similarity for text-based vectors and Euclidean for numerical vectors
+      //  as it works best for semantic similarity
+      // Maintain 1536 dimensions since you're likely using OpenAI's embeddings
+      vectorEmbeddingPolicy: productVectorEmbeddingPolicy,
+      indexingPolicy: productIndexingPolicy,
     });
     this.container = container;
   }
