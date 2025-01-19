@@ -8,6 +8,7 @@ import {
   Delete,
   ParseUUIDPipe,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -49,7 +50,7 @@ export class ProductsController {
   @Get('search/description')
   searchProductsByDescriptionVector(
     @Query('description') description: string,
-    @Query('top') top: number = 10,
+    @Query('top', ParseIntPipe) top: number = 10,
   ) {
     return this.productsService.searchProductsByDescriptionVector(
       description,
@@ -61,7 +62,7 @@ export class ProductsController {
   @Get('search/features')
   searchProductsByFeaturesVector(
     @Query('features') features: string,
-    @Query('top') top: number = 10,
+    @Query('top', ParseIntPipe) top: number = 10,
   ) {
     return this.productsService.searchProductsByFeaturesVector(features, top);
   }
@@ -70,16 +71,16 @@ export class ProductsController {
   @Get('search/tags')
   searchProductsByTagsVector(
     @Query('tags') tags: string,
-    @Query('top') top: number = 10,
+    @Query('top', ParseIntPipe) top: number = 10,
   ) {
     return this.productsService.searchProductsByTagsVector(tags, top);
   }
 
-  //searchProductsByReviewsCount url= http://localhost:3000/products/search/reviews?reviewsCount=10?top=10
-  @Get('search/reviews')
+  //searchProductsByReviewsCount url= http://localhost:3000/products/search/review-counts?reviewsCount=10?top=10
+  @Get('search/review-counts')
   searchProductsByReviewsCountVector(
     @Query('reviewsCount') reviewsCount: number,
-    @Query('top') top: number = 10,
+    @Query('top', ParseIntPipe) top: number = 10,
   ) {
     return this.productsService.searchProductsByReviewsCountVector(
       reviewsCount,

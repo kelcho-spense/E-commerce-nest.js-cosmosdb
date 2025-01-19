@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly databaseService: DatabaseService) { }
+  constructor(private readonly databaseService: DatabaseService) {}
 
   getHello(): string {
     return 'Hello World!';

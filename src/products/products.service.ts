@@ -8,7 +8,7 @@ import { generateTextVector } from '../utils/embedding';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService) { }
 
   // Create a new product
   async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -107,11 +107,38 @@ export class ProductsService {
     const descriptionVector = await generateTextVector(description);
 
     const container = this.databaseService.getContainer();
+    if (descriptionVector === null) {
+      throw new Error('Failed to generate description vector');
+    }
     const querySpec = {
-      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
-      VectorDistance( c.descriptionVector, @descriptionVector ) AS SimilarityScore  
-      FROM c FROM c 
-      ORDER BY VectorDistance(c.descriptionVector, @queryVector)`,
+      query: `
+        SELECT TOP @top
+          c.id,
+          c.name,
+          c.brand,
+          c.sku,
+          c.category,
+          c.price,
+          c.currency,
+          c.stock,
+          c.description,
+          c.features,
+          c.rating,
+          c.reviewsCount,
+          c.tags,
+          c.imageUrl,
+          c.manufacturer,
+          c.model,
+          c.releaseDate,
+          c.warranty,
+          c.color,
+          c.material,
+          c.origin,
+          c.createdAt,
+          c.updatedAt,
+          VectorDistance( c.descriptionVector, @descriptionVector) AS SimilarityScore
+        FROM c
+        ORDER BY VectorDistance(c.descriptionVector, @descriptionVector)`,
       parameters: [
         { name: '@descriptionVector', value: descriptionVector },
         { name: '@top', value: top },
@@ -120,6 +147,7 @@ export class ProductsService {
     const { resources } = await container.items.query(querySpec).fetchAll();
     return resources;
   }
+
   // searchProductsByFeaturesVector
   async searchProductsByFeaturesVector(
     features: string,
@@ -128,10 +156,34 @@ export class ProductsService {
     const featuresVector = await generateTextVector(features);
     const container = this.databaseService.getContainer();
     const querySpec = {
-      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      query: `
+      SELECT TOP @top
+        c.id,
+        c.name,
+        c.brand,
+        c.sku,
+        c.category,
+        c.price,
+        c.currency,
+        c.stock,
+        c.description,
+        c.features,
+        c.rating,
+        c.reviewsCount,
+        c.tags,
+        c.imageUrl,
+        c.manufacturer,
+        c.model,
+        c.releaseDate,
+        c.warranty,
+        c.color,
+        c.material,
+        c.origin,
+        c.createdAt,
+        c.updatedAt,
       VectorDistance( c.featuresVector, @featuresVector ) AS SimilarityScore  
-      FROM c FROM c 
-      ORDER BY VectorDistance(c.featuresVector, @queryVector)`,
+      FROM c 
+      ORDER BY VectorDistance(c.featuresVector, @featuresVector)`,
       parameters: [
         { name: '@featuresVector', value: featuresVector },
         { name: '@top', value: top },
@@ -149,10 +201,34 @@ export class ProductsService {
     const tagsVector = await generateTextVector(tags);
     const container = this.databaseService.getContainer();
     const querySpec = {
-      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      query: `
+      SELECT TOP @top
+        c.id,
+        c.name,
+        c.brand,
+        c.sku,
+        c.category,
+        c.price,
+        c.currency,
+        c.stock,
+        c.description,
+        c.features,
+        c.rating,
+        c.reviewsCount,
+        c.tags,
+        c.imageUrl,
+        c.manufacturer,
+        c.model,
+        c.releaseDate,
+        c.warranty,
+        c.color,
+        c.material,
+        c.origin,
+        c.createdAt,
+        c.updatedAt,
       VectorDistance( c.tagsVector, @tagsVector ) AS SimilarityScore  
-      FROM c FROM c 
-      ORDER BY VectorDistance(c.tagsVector, @queryVector)`,
+      FROM c 
+      ORDER BY VectorDistance(c.tagsVector, @tagsVector)`,
       parameters: [
         { name: '@tagsVector', value: tagsVector },
         { name: '@top', value: top },
@@ -172,8 +248,8 @@ export class ProductsService {
     const querySpec = {
       query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
       VectorDistance( c.reviewsCountVector, @reviewsCountVector ) AS SimilarityScore  
-      FROM c FROM c 
-      ORDER BY VectorDistance(c.reviewsCountVector, @queryVector)`,
+      FROM c
+      ORDER BY VectorDistance(c.reviewsCountVector, @reviewsCountVector)`,
       parameters: [
         { name: '@reviewsCountVector', value: reviewsCountVector },
         { name: '@top', value: top },

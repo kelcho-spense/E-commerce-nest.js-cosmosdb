@@ -50,13 +50,13 @@ DELETE http://localhost:8000/products/92300491-82cb-489d-9b39-827c54ba751b
 ### VECTOR SEARCH OPERATIONS ###
 
 ### searchProductsByDescription
-GET http://localhost:8000/products/search/description?description='wireless'?top=10
+GET http://localhost:8000/products/search/description?description=Computer&top=4
 ### searchProductsByFeatures 
-GET http://localhost:8000/products/search/features?features='white'?top=10
+GET http://localhost:8000/products/search/features?features=white&top=10
 ### searchProductsByTags
-GET http://localhost:8000/products/search/tags?tags='wireless'?top=10
+GET http://localhost:8000/products/search/tags?tags=wireless&top=10
 ### searchProductsByReviewsCount
-GET http://localhost:8000/products/search/reviewsCount?reviewsCount=100?top=10
+GET http://localhost:8000/products/search/review-counts?reviewsCount=100&top=10
 
 
 ### GENERATE FAKE DATA ##
