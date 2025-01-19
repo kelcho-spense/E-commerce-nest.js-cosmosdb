@@ -45,5 +45,5 @@ Content-Type: application/json
 }
 
 ### delete a product
-DELETE http://localhost:8000/products/91300491-82cb-489d-9b39-827c54ba751b
+DELETE http://localhost:8000/products/92300491-82cb-489d-9b39-827c54ba751b
 
