@@ -20,6 +20,8 @@
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
 </p>
 
+# E-Commerce API (product search) with Vector Search
+
 ## Description
 
 This project demonstrates building an e-commerce API using Nest.js integrated with Azure Cosmos DB's vector search capabilities. It showcases how to implement semantic product search using vector similarity.
