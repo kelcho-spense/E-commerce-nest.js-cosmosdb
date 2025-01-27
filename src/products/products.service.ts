@@ -100,10 +100,11 @@ export class ProductsService {
   }
 
   // searchProductsByDescriptionVector
-  async searchProductsByDescriptionVector(
-    description: string,
-    top: number,
-  ): Promise<Product[]> {
+  async searchProductsByDescriptionVector(params: {
+    description: string;
+    top?: number;
+  }): Promise<Product[]> {
+    const { description, top = 10 } = params;
     const descriptionVector = await generateTextVector(description);
 
     const container = this.databaseService.getContainer();
@@ -149,10 +150,12 @@ export class ProductsService {
   }
 
   // searchProductsByFeaturesVector
-  async searchProductsByFeaturesVector(
-    features: string,
-    top: number,
-  ): Promise<Product[]> {
+  async searchProductsByFeaturesVector(params: {
+    features: string;
+    top: number;
+  }): Promise<Product[]> {
+    const { features, top = 10 } = params;
+
     const featuresVector = await generateTextVector(features);
     const container = this.databaseService.getContainer();
     const querySpec = {
@@ -194,10 +197,11 @@ export class ProductsService {
   }
 
   // searchProductsByTagsVector
-  async searchProductsByTagsVector(
-    tags: string,
-    top: number,
-  ): Promise<Product[]> {
+  async searchProductsByTagsVector(params: {
+    tags: string;
+    top: number;
+  }): Promise<Product[]> {
+    const { tags, top = 10 } = params;
     const tagsVector = await generateTextVector(tags);
     const container = this.databaseService.getContainer();
     const querySpec = {
@@ -239,14 +243,39 @@ export class ProductsService {
   }
 
   // searchProductsByReviewsCountVector
-  async searchProductsByReviewsCountVector(
-    reviewsCount: number,
-    top: number,
-  ): Promise<Product[]> {
+  async searchProductsByReviewsCountVector(params: {
+    reviewsCount: number;
+    top: number;
+  }): Promise<Product[]> {
+    const { reviewsCount, top = 10 } = params;
     const reviewsCountVector = await generateTextVector(reviewsCount);
     const container = this.databaseService.getContainer();
     const querySpec = {
-      query: `SELECT TOP @top  c.id, c.name, c.brand, c.sku, c.category, c.price, c.currency, c.stock, c.description, c.features, c.rating, c.reviewsCount, c.tags, c.imageUrl, c.manufacturer, c.model, c.releaseDate, c.warranty, c.color, c.material, c.origin, c.createdAt, c.updatedAt,
+      query: `
+      SELECT TOP @top
+        c.id,
+        c.name,
+        c.brand,
+        c.sku,
+        c.category,
+        c.price,
+        c.currency,
+        c.stock,
+        c.description,
+        c.features,
+        c.rating,
+        c.reviewsCount, 
+        c.tags,
+        c.imageUrl,
+        c.manufacturer,
+        c.model,
+        c.releaseDate,
+        c.warranty,
+        c.color,
+        c.material,
+        c.origin,
+        c.createdAt,
+        c.updatedAt,
       VectorDistance( c.reviewsCountVector, @reviewsCountVector ) AS SimilarityScore  
       FROM c
       ORDER BY VectorDistance(c.reviewsCountVector, @reviewsCountVector)`,
