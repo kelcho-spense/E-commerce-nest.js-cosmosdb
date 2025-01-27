@@ -50,41 +50,44 @@ export class ProductsController {
   @Get('search/description')
   searchProductsByDescriptionVector(
     @Query('description') description: string,
-    @Query('top', ParseIntPipe) top: number = 10,
+    @Query('top', ParseIntPipe) top: number,
   ) {
-    return this.productsService.searchProductsByDescriptionVector(
+    return this.productsService.searchProductsByDescriptionVector({
       description,
       top,
-    );
+    });
   }
 
   // searchProductsByFeatures url= http://localhost:3000/products/search/features?features='white'?top=10
   @Get('search/features')
   searchProductsByFeaturesVector(
     @Query('features') features: string,
-    @Query('top', ParseIntPipe) top: number = 10,
+    @Query('top', ParseIntPipe) top: number,
   ) {
-    return this.productsService.searchProductsByFeaturesVector(features, top);
+    return this.productsService.searchProductsByFeaturesVector({
+      features,
+      top,
+    });
   }
 
   //searchProductsByFeatures url= http://localhost:3000/products/search/tags?tags='white'?top=10
   @Get('search/tags')
   searchProductsByTagsVector(
     @Query('tags') tags: string,
-    @Query('top', ParseIntPipe) top: number = 10,
+    @Query('top', ParseIntPipe) top: number,
   ) {
-    return this.productsService.searchProductsByTagsVector(tags, top);
+    return this.productsService.searchProductsByTagsVector({ tags, top });
   }
 
   //searchProductsByReviewsCount url= http://localhost:3000/products/search/review-counts?reviewsCount=10?top=10
   @Get('search/review-counts')
   searchProductsByReviewsCountVector(
     @Query('reviewsCount') reviewsCount: number,
-    @Query('top', ParseIntPipe) top: number = 10,
+    @Query('top', ParseIntPipe) top: number,
   ) {
-    return this.productsService.searchProductsByReviewsCountVector(
+    return this.productsService.searchProductsByReviewsCountVector({
       reviewsCount,
       top,
-    );
+    });
   }
 }
