@@ -8,6 +8,9 @@ import { generateTextVector } from '../utils/embedding';
 
 @Injectable()
 export class ProductsService {
+  // TODO WORKSHOP: Add a private property to hold the product container
+  private productContainer;
+
   constructor(private readonly databaseService: DatabaseService) {}
 
   // Create a new product
@@ -32,7 +35,6 @@ export class ProductsService {
 
     // Wait for all vectors to be generated
     const vectors = await Promise.all(Object.values(vectorPromises));
-    console.log(vectors);
 
     const product: Product = {
       id: uuidv4(),
@@ -137,7 +139,7 @@ export class ProductsService {
           c.origin,
           c.createdAt,
           c.updatedAt,
-          VectorDistance( c.descriptionVector, @descriptionVector) AS SimilarityScore
+        VectorDistance( c.descriptionVector, @descriptionVector) AS SimilarityScore
         FROM c
         ORDER BY VectorDistance(c.descriptionVector, @descriptionVector)`,
       parameters: [

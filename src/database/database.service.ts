@@ -55,7 +55,6 @@ export class DatabaseService implements OnModuleInit {
       // Maintain 1536 dimensions since you're likely using OpenAI's embeddings
       vectorEmbeddingPolicy: productVectorEmbeddingPolicy,
       indexingPolicy: productIndexingPolicy,
-      maxThroughput: 4000,
     });
     this.container = container;
   }
