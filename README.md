@@ -1,4 +1,8 @@
 # Vector Search
+<a href="https://learn.microsoft.com/azure/cosmos-db/gen-ai/hybrid-search?WT.mc_id=MVP_406617"  target="_blank">
+<img src="./images/vector-search.svg" />
+</a>
+
 ## E-Commerce API (product search) with Vector Search using Azure Cosmos DB & Nest.js
 This project demonstrates building an e-commerce API using Nest.js integrated with Azure Cosmos DB's vector search capabilities. It showcases how to implement semantic product search using vector similarity.
 
