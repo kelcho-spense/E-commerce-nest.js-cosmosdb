@@ -1,5 +1,5 @@
 import { IndexingPolicy, VectorIndexType } from '@azure/cosmos';
-
+// Define the indexing policy for the products container
 export const productIndexingPolicy: IndexingPolicy = {
   // Define the paths to be included in the index
   includedPaths: [
@@ -17,7 +17,7 @@ export const productIndexingPolicy: IndexingPolicy = {
   // Define the vector indexes for the vectors
   vectorIndexes: [
     { path: '/descriptionVector', type: VectorIndexType.DiskANN }, // Keep DiskANN for primary vector
-    { path: '/tagsVector', type: VectorIndexType.QuantizedFlat },
+    { path: '/tagsVector', type: VectorIndexType.QuantizedFlat }, // Use QuantizedFlat for secondary vectors
     { path: '/featuresVector', type: VectorIndexType.QuantizedFlat },
     { path: '/reviewsCountVector', type: VectorIndexType.QuantizedFlat },
   ],

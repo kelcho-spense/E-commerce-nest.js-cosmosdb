@@ -8,8 +8,8 @@ export const productVectorEmbeddingPolicy: VectorEmbeddingPolicy = {
   // Define the paths to be included in the index
   vectorEmbeddings: [
     {
-      path: '/descriptionVector',
-      dataType: VectorEmbeddingDataType.Float32,
+      path: '/descriptionVector', // path to the vector in the document
+      dataType: VectorEmbeddingDataType.Float32, // data type of the vector
       dimensions: 1536, // default is 1536
       distanceFunction: VectorEmbeddingDistanceFunction.Cosine, //metric used to compute distance/similarity
     },

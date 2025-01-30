@@ -53,8 +53,8 @@ export class DatabaseService implements OnModuleInit {
       // Use Cosine similarity for text-based vectors and Euclidean for numerical vectors
       //  as it works best for semantic similarity
       // Maintain 1536 dimensions since you're likely using OpenAI's embeddings
-      vectorEmbeddingPolicy: productVectorEmbeddingPolicy,
-      indexingPolicy: productIndexingPolicy,
+      vectorEmbeddingPolicy: productVectorEmbeddingPolicy, // Use DiskANN index type since it's best for large datasets (>50k vectors)
+      indexingPolicy: productIndexingPolicy, // Keep vectors excluded from regular indexing paths for better performance
     });
     this.container = container;
   }
